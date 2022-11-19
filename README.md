@@ -10,6 +10,8 @@ composer require webvpf/wn-packagist-plugin
 
 ![screen](https://raw.githubusercontent.com/WebVPF/wn-packagist-plugin/main/assets/img/screen-view.jpg)
 
+![screen](https://raw.githubusercontent.com/WebVPF/wn-packagist-plugin/main/assets/img/screen-props.jpg)
+
 ---
 
 Widget data is cached for 12 hours. It's related to the Packagist API:
