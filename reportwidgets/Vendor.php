@@ -4,6 +4,7 @@ use Backend\Classes\ReportWidgetBase;
 use Exception;
 use Cache;
 use Carbon\Carbon;
+use Lang;
 
 class Vendor extends ReportWidgetBase
 {
@@ -23,9 +24,9 @@ class Vendor extends ReportWidgetBase
                 'default'     => 'name',
                 'placeholder' => 'webvpf.packagist::lang.prop.choose_option',
                 'options'     => [
-                    'name'         => 'webvpf.packagist::lang.prop.option_name',
-                    'downloads'    => 'webvpf.packagist::lang.prop.downloads',
-                    'github_stars' => 'webvpf.packagist::lang.prop.stars',
+                    'name'         => Lang::get('webvpf.packagist::lang.prop.option_name'),
+                    'downloads'    => Lang::get('webvpf.packagist::lang.prop.downloads'),
+                    'github_stars' => Lang::get('webvpf.packagist::lang.prop.stars'),
                 ],
             ],
             'order' => [
@@ -34,8 +35,8 @@ class Vendor extends ReportWidgetBase
                 'default'     => 'asc',
                 'placeholder' => 'webvpf.packagist::lang.prop.choose_option',
                 'options'     => [
-                    'asc'  => 'webvpf.packagist::lang.prop.ascending',
-                    'desc' => 'webvpf.packagist::lang.prop.descending',
+                    'asc'  => Lang::get('webvpf.packagist::lang.prop.ascending'),
+                    'desc' => Lang::get('webvpf.packagist::lang.prop.descending'),
                 ],
             ],
         ];
