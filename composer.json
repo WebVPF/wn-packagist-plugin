@@ -1,0 +1,21 @@
+{
+    "name": "webvpf/wn-packagist-plugin",
+    "type": "winter-plugin",
+    "description": "Packagist - plugin for Winter CMS.",
+    "homepage": "https://github.com/WebVPF/wn-packagist-plugin",
+    "keywords": ["winter cms", "wintercms", "wintercms-plugin"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WebVPF",
+            "role": "Author"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/WebVPF/wn-packagist-plugin/issues",
+        "source": "https://github.com/WebVPF/wn-packagist-plugin"
+    },
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}
