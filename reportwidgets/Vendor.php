@@ -2,8 +2,6 @@
 
 use Backend\Classes\ReportWidgetBase;
 use Exception;
-use Cache;
-use Carbon\Carbon;
 use Lang;
 
 class Vendor extends ReportWidgetBase
@@ -42,63 +40,52 @@ class Vendor extends ReportWidgetBase
         ];
     }
 
-    protected function loadAssets(): void
-    {
-        $this->addCss('/plugins/webvpf/packagist/assets/css/style.css', 'WebVPF.Packagist');
-    }
-
     public function render(): string
     {
-        try {
-            $this->prepareVars();
-        } catch (Exception $ex) {
-            $this->vars['error'] = $ex->getMessage();
-        }
+        $this->addCss('/plugins/webvpf/packagist/assets/css/style.css', 'WebVPF.Packagist');
 
-        return $this->makePartial('vendor');
+        return $this->makePartial('widget');
     }
 
-    public function prepareVars()
+    public function loadData()
     {
-        $expiresAt = Carbon::now()->addHours(12);
+        $url_list = 'https://packagist.org/packages/list.json?vendor=' . $this->property('vendor');
 
-        // Cache::forget('packages_packagist_' . $this->property('vendor')); // remove item from the cache
+        $list = json_decode(file_get_contents($url_list), true);
 
-        $vendor_packages = Cache::remember('packages_packagist_' . $this->property('vendor'), $expiresAt, function() {
-            $url_list = 'https://packagist.org/packages/list.json?vendor=' . $this->property('vendor');
+        $packages = array();
 
-            $list = json_decode(file_get_contents($url_list), true);
+        foreach ($list['packageNames'] as $package) {
+            $url_package = 'https://packagist.org/packages/' . $package . '.json';
 
-            $packages = array();
+            $package_packagist = json_decode(file_get_contents($url_package), true);
 
-            foreach ($list['packageNames'] as $package) {
-                $url_package = 'https://packagist.org/packages/' . $package . '.json';
-
-                $package_packagist = json_decode(file_get_contents($url_package), true);
-
-                $packages[$package] = $package_packagist['package'];
-            }
-
-            return $packages;
-        });
+            $packages[$package] = $package_packagist['package'];
+        }
 
         if ($this->property('sort') != 'name') {
-            $vendor_packages = array_values(array_sort($vendor_packages, function ($value) {
+            $packages = array_values(array_sort($packages, function ($value) {
                 return $this->property('sort') == 'github_stars' ? $value['github_stars'] : $value['downloads']['total'];
             }));
         }
 
-        // if ($this->property('sort') != 'downloads') {
-        //     $vendor_packages = array_values(array_sort($vendor_packages, function ($value) {
-
-        //         return $value[$this->property('sort')];
-        //     }));
-        // }
-
         if ($this->property('order') == 'desc') {
-            $vendor_packages = array_reverse($vendor_packages);
+            $packages = array_reverse($packages);
         }
 
-        $this->vars['vendor_list'] = $vendor_packages;
+        $this->vars['vendor_list'] = $packages;
+    }
+
+    public function onLoad()
+    {
+        try {
+            $this->loadData();
+        } catch (Exception $ex) {
+            $this->vars['error'] = $ex->getMessage();
+        }
+
+        return [
+            '#' . $this->alias => $this->makePartial('report')
+        ];
     }
 }
